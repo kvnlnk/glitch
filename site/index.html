@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>glitch — emergent particle life</title>
+  <meta name="description" content="glitch is a WebGPU Particle Life Simulator — 100k particles, 6 types, real-time emergent behavior in your browser." />
+
+  <!-- Social -->
+  <meta property="og:title" content="glitch — emergent particle life" />
+  <meta property="og:description" content="WebGPU Particle Life Simulator. 100k particles. Real-time." />
+  <meta property="og:url" content="https://github.com/kvnlnk/glitch" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;700;800&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/src/styles/main.css" />
+
+  <!-- Module -->
+  <script type="module" src="/src/main.js" defer></script>
+</head>
+<body>
+
+  <!-- ======== Header ======== -->
+  <header class="site-header" role="banner">
+    <nav class="header-inner container" aria-label="Primary navigation">
+      <a href="#" class="logo" aria-label="glitch home">glitch</a>
+
+      <ul class="nav-list" role="list">
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#how-it-works" class="nav-link">How it works</a></li>
+        <li><a href="#install" class="nav-link">Install</a></li>
+        <li>
+          <a
+            href="https://github.com/kvnlnk/glitch"
+            class="github-link"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View source on GitHub"
+          >
+            <!-- GitHub icon (Octocat mark) -->
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+            </svg>
+            <span class="sr-only">GitHub</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ======== Hero ======== -->
+  <section class="hero" id="hero" data-section aria-label="Hero section">
+    <h1 class="hero-title">
+      <span class="glitch-text" data-text="glitch">glitch</span>
+    </h1>
+    <p class="hero-tagline">emergent particle life</p>
+    <div class="hero-decoration" aria-hidden="true"></div>
+
+    <!-- Demo / preview area -->
+    <div class="demo-area" id="glitch-demo-canvas" role="img" aria-label="Animated particle simulation preview">
+      <div class="demo-placeholder" aria-hidden="true">
+        <div class="particle-icon">
+          <span class="particle-dot"></span>
+          <span class="particle-dot"></span>
+          <span class="particle-dot"></span>
+          <span class="particle-dot"></span>
+          <span class="particle-dot"></span>
+          <span class="particle-dot"></span>
+        </div>
+        <span class="demo-label">simulation preview</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" aria-hidden="true" />
+
+  <!-- ======== Features ======== -->
+  <section class="section" id="features" data-section aria-labelledby="features-heading">
+    <div class="container">
+      <header class="section-header">
+        <p class="subtitle">capabilities</p>
+        <h2 id="features-heading">Powered by WebGPU</h2>
+      </header>
+
+      <div class="features-grid" role="list">
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[01]</span>
+          <h3>100k particles</h3>
+          <p>Simulate up to one hundred thousand individual particles simultaneously, each with unique state and behavior.</p>
+        </article>
+
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[02]</span>
+          <h3>6 particle types</h3>
+          <p>Define distinct species with custom interaction rules. Watch emergent patterns form as types attract and repel.</p>
+        </article>
+
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[03]</span>
+          <h3>Rule matrix</h3>
+          <p>A configurable 6&times;6 attraction&ndash;repulsion matrix governs inter-type forces, enabling complex flocking and self-organization.</p>
+        </article>
+
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[04]</span>
+          <h3>WebGPU compute</h3>
+          <p>All simulation logic runs on the GPU via WebGPU compute shaders for maximum parallelism and performance.</p>
+        </article>
+
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[05]</span>
+          <h3>Real-time</h3>
+          <p>Interactive frame-by-frame rendering with responsive controls. Tweak parameters and see results instantly.</p>
+        </article>
+
+        <article class="feature-card" role="listitem">
+          <span class="feature-icon" aria-hidden="true">[06]</span>
+          <h3>Open source</h3>
+          <p>MIT-licensed. Fork, modify, and experiment freely. Contributions and new particle life discoveries welcome.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" aria-hidden="true" />
+
+  <!-- ======== How It Works ======== -->
+  <section class="section" id="how-it-works" data-section aria-labelledby="how-heading">
+    <div class="container">
+      <header class="section-header">
+        <p class="subtitle">workflow</p>
+        <h2 id="how-heading">How it works</h2>
+      </header>
+
+      <div class="steps-list" role="list">
+        <div class="step" role="listitem">
+          <h3>Initialize the universe</h3>
+          <p>Distribute thousands of particles across a 2D field, each assigned one of six types with random initial positions and velocities.</p>
+        </div>
+
+        <div class="step" role="listitem">
+          <h3>Compute interactions</h3>
+          <p>For each particle, the GPU evaluates attraction or repulsion from every nearby particle based on the configurable rule matrix.</p>
+        </div>
+
+        <div class="step" role="listitem">
+          <h3>Watch life emerge</h3>
+          <p>Simple local rules produce complex global patterns &mdash; flocking swarms, oscillating clusters, and stable orbiting structures.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" aria-hidden="true" />
+
+  <!-- ======== Install / Usage ======== -->
+  <section class="section" id="install" data-section aria-labelledby="install-heading">
+    <div class="container">
+      <header class="section-header">
+        <p class="subtitle">get started</p>
+        <h2 id="install-heading">Install &amp; run</h2>
+      </header>
+
+      <div class="code-block-wrapper">
+        <div class="code-block">
+          <span class="code-block-header">Clone</span>
+          <pre><code>git clone https://github.com/kvnlnk/glitch.git
+cd glitch</code></pre>
+        </div>
+
+        <div class="code-block">
+          <span class="code-block-header">Install</span>
+          <pre><code>npm install</code></pre>
+        </div>
+
+        <div class="code-block">
+          <span class="code-block-header">Run</span>
+          <pre><code>npm run dev</code></pre>
+        </div>
+
+        <div class="code-block" style="margin-top: var(--size-lg);">
+          <span class="code-block-header">Build for production</span>
+          <div class="install-commands" role="list">
+            <span class="line" role="listitem"><span class="prompt">$</span> <span class="cmd">npm run build</span></span>
+            <span class="line" role="listitem"><span class="prompt">$</span> <span class="cmd">npm run preview</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider" aria-hidden="true" />
+
+  <!-- ======== Footer ======== -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <p class="footer-meta">
+        &copy; 2026&nbsp;
+        <a href="https://github.com/kvnlnk" target="_blank" rel="noopener noreferrer">kvnlnk</a>
+        &mdash; MIT License
+      </p>
+
+      <ul class="footer-links" role="list">
+        <li>
+          <a
+            href="https://github.com/kvnlnk/glitch"
+            class="footer-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://github.com/kvnlnk/glitch/blob/main/LICENSE"
+            class="footer-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            License
+          </a>
+        </li>
+      </ul>
+    </div>
+  </footer>
+
+</body>
+</html>
