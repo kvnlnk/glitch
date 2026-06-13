@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>glitch — Particle Life</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body>
+    <div id="fallback" class="hidden">
+      <h1>WebGPU not available</h1>
+      <p>glitch requires a browser with WebGPU support.</p>
+      <p>Try Chrome 113+, Edge 113+, or Firefox Nightly.</p>
+    </div>
+
+    <canvas id="canvas"></canvas>
+
+    <div id="controls">
+      <div class="controls-header">
+        <h2>glitch</h2>
+        <span class="particle-count" id="particleCount">0 particles</span>
+        <span class="fps" id="fpsDisplay">0 FPS</span>
+      </div>
+
+      <div class="control-group">
+        <label>Simulation</label>
+        <div class="control-row">
+          <button id="btnPause">⏸ Pause</button>
+          <button id="btnReset">↻ Reset</button>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label>Particle Count</label>
+        <input type="range" id="sliderCount" min="10000" max="200000" step="10000" value="100000" />
+        <span class="value-display" id="countValue">100k</span>
+      </div>
+
+      <div class="control-group" id="ruleMatrix">
+        <label>Type Rules</label>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
