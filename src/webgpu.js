@@ -144,8 +144,14 @@ export function createSimulation(device, shaderModule, count) {
   }
 
   // Compute step
+  let mouseData = { x: 0, y: 0, strength: 0 };
+
+  function setMouse(x, y, strength) {
+    mouseData = { x, y, strength };
+  }
+
   function computeStep(dt) {
-    const buf = new ArrayBuffer(32);
+    const buf = new ArrayBuffer(44);
     const view = new DataView(buf);
     view.setUint32(0, currentCount, true);
     view.setFloat32(4, dt, true);
@@ -154,7 +160,9 @@ export function createSimulation(device, shaderModule, count) {
     view.setFloat32(16, DOMAIN_SIZE, true);
     view.setFloat32(20, 3.0, true);
     view.setFloat32(24, 0.92, true);
-    view.setFloat32(28, 0, true);
+    view.setFloat32(28, mouseData.x, true);
+    view.setFloat32(28 + 4, mouseData.y, true);
+    view.setFloat32(28 + 8, mouseData.strength, true);
     device.queue.writeBuffer(paramsBuffer, 0, buf);
 
     const bg = activeIsA ? bindGroupA : bindGroupB;
@@ -196,7 +204,7 @@ export function createSimulation(device, shaderModule, count) {
     currentCount = targetCount;
   }
 
-  return { computeStep, readPositions, updateRules, resetParticles, setCount };
+  return { computeStep, readPositions, updateRules, resetParticles, setCount, setMouse };
 }
 
 function generateParticleData(numParticles, domainSize, numTypes) {
