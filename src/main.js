@@ -25,6 +25,9 @@ let animFrameId = null;
 let lastTimestamp = 0;
 let frameCount = 0;
 let fpsTimer = 0;
+let mouseActive = false;
+let mouseX = 0;
+let mouseY = 0;
 
 // Particle type colors (RGB 0-1)
 const TYPE_COLORS = [
@@ -35,6 +38,66 @@ const TYPE_COLORS = [
   [1.0, 0.55, 0.58],  // pink   #ff8b94
   [0.58, 0.88, 0.83], // aqua   #95e1d3
 ];
+
+// --- Preset Patterns (6×6 rule matrices) ---
+const PRESETS = {
+  default: [
+    [ 0.5, -0.4,  0.3, -0.2,  0.1, -0.3],
+    [-0.3,  0.6, -0.5,  0.2, -0.1,  0.4],
+    [ 0.2, -0.3,  0.7, -0.6,  0.5, -0.1],
+    [-0.4,  0.1, -0.2,  0.5, -0.3,  0.6],
+    [ 0.3, -0.5,  0.4, -0.1,  0.8, -0.2],
+    [-0.1,  0.2, -0.4,  0.3, -0.6,  0.9],
+  ],
+  cells: [
+    [ 0.8, -0.2, -0.1,  0.0,  0.1, -0.2],
+    [-0.2,  0.9, -0.3,  0.1, -0.1,  0.0],
+    [-0.1, -0.3,  0.7, -0.1,  0.2,  0.0],
+    [ 0.0,  0.1, -0.1,  0.8, -0.2, -0.1],
+    [ 0.1, -0.1,  0.2, -0.2,  0.6, -0.1],
+    [-0.2,  0.0,  0.0, -0.1, -0.1,  0.5],
+  ],
+  worms: [
+    [ 0.4,  0.3,  0.2, -0.1,  0.0,  0.1],
+    [ 0.3,  0.5,  0.1, -0.2,  0.1, -0.1],
+    [ 0.2,  0.1,  0.6,  0.0, -0.1,  0.0],
+    [-0.1, -0.2,  0.0,  0.3,  0.2, -0.1],
+    [ 0.0,  0.1, -0.1,  0.2,  0.4,  0.1],
+    [ 0.1, -0.1,  0.0, -0.1,  0.1,  0.3],
+  ],
+  galaxy: [
+    [ 0.6,  0.4, -0.3,  0.2, -0.1,  0.0],
+    [ 0.4,  0.7, -0.2,  0.3,  0.1, -0.2],
+    [-0.3, -0.2,  0.5,  0.4, -0.1,  0.0],
+    [ 0.2,  0.3,  0.4,  0.6,  0.2, -0.1],
+    [-0.1,  0.1, -0.1,  0.2,  0.5,  0.3],
+    [ 0.0, -0.2,  0.0, -0.1,  0.3,  0.4],
+  ],
+  jelly: [
+    [ 0.3,  0.2, -0.1,  0.0,  0.1, -0.2],
+    [ 0.2,  0.4,  0.1, -0.1,  0.0, -0.1],
+    [-0.1,  0.1,  0.3,  0.2, -0.1,  0.0],
+    [ 0.0, -0.1,  0.2,  0.5,  0.1, -0.1],
+    [ 0.1,  0.0, -0.1,  0.1,  0.4,  0.2],
+    [-0.2, -0.1,  0.0, -0.1,  0.2,  0.6],
+  ],
+  crystals: [
+    [-0.4, -0.2,  0.0, -0.1,  0.1, -0.1],
+    [-0.2, -0.5, -0.1,  0.0, -0.1,  0.0],
+    [ 0.0, -0.1, -0.3, -0.2,  0.0, -0.1],
+    [-0.1,  0.0, -0.2, -0.4, -0.1,  0.1],
+    [ 0.1, -0.1,  0.0, -0.1, -0.3,  0.0],
+    [-0.1,  0.0, -0.1,  0.1,  0.0, -0.2],
+  ],
+  chaos: [
+    [ 0.05, -0.02,  0.03, -0.04,  0.01, -0.03],
+    [-0.03,  0.06, -0.05,  0.02, -0.01,  0.04],
+    [ 0.02, -0.03,  0.07, -0.06,  0.05, -0.01],
+    [-0.04,  0.01, -0.02,  0.05, -0.03,  0.06],
+    [ 0.03, -0.05,  0.04, -0.01,  0.08, -0.02],
+    [-0.01,  0.02, -0.04,  0.03, -0.06,  0.09],
+  ],
+};
 
 // --- Canvas sizing ---
 function resizeCanvas() {
@@ -190,7 +253,98 @@ function setupControls() {
     particleCountEl.textContent = `${numParticles.toLocaleString()} particles`;
   });
 
+  // --- Preset dropdown ---
+  const presetSelect = document.getElementById('presetSelect');
+  presetSelect.addEventListener('change', () => {
+    applyPreset(presetSelect.value);
+  });
+
+  // --- Mouse interaction ---
+  canvas.addEventListener('mousedown', (e) => {
+    mouseActive = true;
+    updateMousePos(e);
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (mouseActive) updateMousePos(e);
+  });
+
+  canvas.addEventListener('mouseup', () => {
+    mouseActive = false;
+    sim?.setMouse(0, 0, 0);
+  });
+
+  canvas.addEventListener('mouseleave', () => {
+    mouseActive = false;
+    sim?.setMouse(0, 0, 0);
+  });
+
+  // Touch support
+  canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    mouseActive = true;
+    updateTouchPos(e);
+  }, { passive: false });
+
+  canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (mouseActive) updateTouchPos(e);
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => {
+    mouseActive = false;
+    sim?.setMouse(0, 0, 0);
+  });
+
   buildRuleControls();
+}
+
+function updateMousePos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const domainSize = 800;
+  const scale = Math.min(canvas.clientWidth / domainSize, canvas.clientHeight / domainSize);
+  const offsetX = (canvas.clientWidth - domainSize * scale) / 2;
+  const offsetY = (canvas.clientHeight - domainSize * scale) / 2;
+  const simX = (e.clientX - rect.left - offsetX) / scale;
+  const simY = (e.clientY - rect.top - offsetY) / scale;
+  if (simX >= 0 && simX <= domainSize && simY >= 0 && simY <= domainSize) {
+    sim?.setMouse(simX, simY, 0.5);
+  }
+}
+
+function updateTouchPos(e) {
+  const touch = e.touches[0];
+  if (!touch) return;
+  const rect = canvas.getBoundingClientRect();
+  const domainSize = 800;
+  const scale = Math.min(canvas.clientWidth / domainSize, canvas.clientHeight / domainSize);
+  const offsetX = (canvas.clientWidth - domainSize * scale) / 2;
+  const offsetY = (canvas.clientHeight - domainSize * scale) / 2;
+  const simX = (touch.clientX - rect.left - offsetX) / scale;
+  const simY = (touch.clientY - rect.top - offsetY) / scale;
+  if (simX >= 0 && simX <= domainSize && simY >= 0 && simY <= domainSize) {
+    sim?.setMouse(simX, simY, 0.5);
+  }
+}
+
+function applyPreset(name) {
+  const matrix = PRESETS[name];
+  if (!matrix || !sim) return;
+
+  const sliders = ruleMatrixEl.querySelectorAll('input[type="range"]');
+  const displays = ruleMatrixEl.querySelectorAll('.rule-value');
+  const rules = new Float32Array(NUM_TYPES * NUM_TYPES);
+
+  sliders.forEach((s, i) => {
+    const row = Math.floor(i / NUM_TYPES);
+    const col = i % NUM_TYPES;
+    const val = matrix[row]?.[col] ?? 0;
+    s.value = val.toString();
+    if (displays[i]) displays[i].textContent = val.toFixed(2);
+    rules[i] = val;
+  });
+
+  sim.updateRules(rules);
 }
 
 function buildRuleControls() {

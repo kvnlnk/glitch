@@ -218,6 +218,35 @@ input[type="range"]::-moz-range-thumb {
   color: #aaa;
 }
 
+.value-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+/* Preset select */
+.preset-select {
+  width: 100%;
+  background: #1a1a2e;
+  color: #00f0ff;
+  border: 1px solid #00f0ff44;
+  border-radius: 4px;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+}
+
+.preset-select:hover {
+  border-color: #00f0ff;
+  box-shadow: 0 0 8px #00f0ff33;
+}
+
+.preset-select option {
+  background: #0a0a0a;
+  color: #ccc;
+}
+
 /* Responsive collapses */
 @media (max-width: 640px) {
   #controls {

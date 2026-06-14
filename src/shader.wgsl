@@ -9,6 +9,9 @@ struct SimParams {
   domainSize: f32,
   maxSpeed: f32,
   damping: f32,
+  mouseX: f32,
+  mouseY: f32,
+  mouseStrength: f32,
 };
 
 @group(0) @binding(0) var<storage, read> positionsIn: array<vec2<f32>>;
@@ -126,7 +129,27 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>,
   if (newPos.y < 0.0) { newPos.y = newPos.y + params.domainSize; }
   if (newPos.y > params.domainSize) { newPos.y = newPos.y - params.domainSize; }
 
-  // Write results
+  // Read results
   velocities[i] = vel;
   positionsOut[i] = newPos;
+
+  // Mouse interaction force (attract/repel toward cursor)
+  let ms = params.mouseStrength;
+  if (abs(ms) > 0.001) {
+    let mousePos = vec2<f32>(params.mouseX, params.mouseY);
+    var mouseDelta = mousePos - newPos;
+
+    // Toroidal wrap for mouse too
+    if (mouseDelta.x > halfDom) { mouseDelta.x = mouseDelta.x - params.domainSize; }
+    if (mouseDelta.x < -halfDom) { mouseDelta.x = mouseDelta.x + params.domainSize; }
+    if (mouseDelta.y > halfDom) { mouseDelta.y = mouseDelta.y - params.domainSize; }
+    if (mouseDelta.y < -halfDom) { mouseDelta.y = mouseDelta.y + params.domainSize; }
+
+    let mouseDistSq = dot(mouseDelta, mouseDelta);
+    if (mouseDistSq > 0.1 && mouseDistSq < maxDSq) {
+      let mouseDist = sqrt(mouseDistSq);
+      let mouseForce = ms * (1.0 - mouseDist / maxD) / mouseDist;
+      velocities[i] = velocities[i] + mouseDelta * mouseForce * params.dt;
+    }
+  }
 }
